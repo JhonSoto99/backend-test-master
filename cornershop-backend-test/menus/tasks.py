@@ -42,7 +42,7 @@ def send_menu_to_slack(task=None):
                 )
 
 
-            url = f"{site.domain}/menus/menu_of_day/{menu.uuid}/"
+            url = f"{site.domain}/menus/{menu.uuid}/"
 
             message += f"\n\nTo place your order visit the following link: {url}"
 

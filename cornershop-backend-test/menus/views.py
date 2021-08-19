@@ -129,7 +129,7 @@ def not_available_view(request):
     return render(request, 'menus/not_available.html')
 
 
-class MenuOfDayTemplateView(LoginRequiredMixin, TemplateView):
+class MenuOfDayTemplateView(TemplateView):
     model = Menu
     template_name = 'menus/menu_of_day.html'
 
