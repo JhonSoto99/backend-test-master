@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head_content %}
+    <title>Menu - Add Dish </title>
+{% endblock %}
+{% block container %}
+    <div class="row">
+        <div class="col-lg-2 ml-auto">
+            <a href="{% url 'menus:list' %}" class="btn btn-secondary btn-block">go to list</a>
+        </div>
+        <div class="col-lg-12">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    {% for field in form %}
+                        <div class="form-group">
+                            {{ field.label_tag }}
+                            {{ field }}
+                        </div>
+                    {% endfor %}
+                    <div class="col-lg-2">
+                        <button type="submit" class="btn btn-block btn-primary">Save</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

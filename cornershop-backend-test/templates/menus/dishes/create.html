@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block head_content %}
+	<title>Dishes</title>
+{% endblock %}
+{% block container %}
+<div class="row">
+	<div class="col-lg-2 ml-auto">
+		<a href="{% url 'menus:list_dish' %}" class="btn btn-secondary btn-block">go to list</a>
+	</div>
+	<div class="col-lg-12">
+		<form method="POST">
+			{% csrf_token %}
+			<div class="row">
+				<div class="col-lg-12">
+					<div class="form-group">
+						<label for="dishe-descripion">{{ form.description.label }}</label>
+						<textarea class="form-control {% if form.description.errors %}is-invalid{% endif %}"
+                                  name="description"
+						id="dishe-descripion" rows="2">{% if form.description.value is not None %}{{ form.description.value }}{% endif %}</textarea>
+
+						<div class="invalid-feedback">
+                            {% for error in form.description.errors %}{{ error }}{% endfor %}
+                        </div>
+					</div>
+				</div>
+				<div class="col-lg-2 ml-auto">
+			    	<button type="submit" class="btn btn-block btn-primary">Save</button>
+			    </div>
+			</div>
+		</form>
+	</div>
+</div>
+{% endblock %}

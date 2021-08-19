@@ -1,0 +1,14 @@
+{% extends "base_public.html" %}
+{% block head_content %}
+	<title>Menus of Day</title>
+{% endblock %}
+{% block container %}
+    <div class="row justify-content-md-center">
+        <div class="col-lg-10 mt-5 text-center">
+            <h2>The menu of today not available at the moment</h2>
+            {% comment %}<a href="{% url 'reservations:menu_list' %}" class="btn btn-primary mt-3">
+				Orders
+			</a>{% endcomment %}
+        </div>
+    </div>
+{% endblock %}

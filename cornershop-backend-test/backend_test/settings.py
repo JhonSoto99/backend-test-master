@@ -31,13 +31,15 @@ USE_X_FORWARDED_HOST = False
 SESSION_COOKIE_HTTPONLY = True
 
 SERVER_URL = os.getenv("SERVER_URL", default="*")
+RESERVE_LIMIT_HOUR = os.getenv('RESERVE_LIMIT_HOUR', default='24')
+SLACK_CHANNEL = "https://hooks.slack.com/services/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"
 
 
 APPEND_SLASH = False
 
 # Application definition
 
-INSTALLED_APPS = [
+APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -48,6 +50,17 @@ INSTALLED_APPS = [
     "django_extensions",
     "backend_test.utils",
 ]
+
+LOCAL_APPS = [
+    'accounts',
+    'menus',
+    'orders'
+]
+
+
+INSTALLED_APPS = APPS + LOCAL_APPS
+
+AUTH_USER_MODEL = 'accounts.User'
 
 MIDDLEWARE = [
     "backend_test.middleware.HealthCheckAwareSessionMiddleware",
@@ -66,7 +79,9 @@ ROOT_URLCONF = "backend_test.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [
+            os.path.join(BASE_DIR, 'templates')
+        ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -162,6 +177,14 @@ if getenv("BROWSABLE_API_RENDERER", default=False, coalesce=bool):
 
 # if getenv("SENTRY_DSN", default=None):
 #    sentry_sdk.init(dsn=getenv("SENTRY_DSN"), integrations=[DjangoIntegration()])
+
+# static files
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, 'static'),
+    os.path.join('static'),
+)
 
 LOGGING = {
     "version": 1,

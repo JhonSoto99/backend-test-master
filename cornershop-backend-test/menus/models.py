@@ -8,6 +8,9 @@ import uuid
 from django.db import models
 from django.utils import timezone
 
+# Settings
+from backend_test.settings import RESERVE_LIMIT_HOUR
+
 
 class Menu(models.Model):
     """
@@ -53,6 +56,15 @@ class Menu(models.Model):
     def __str__(self):
         return self.name
 
+    def is_menu_today(self):
+        """
+        Check if the menu is of today.
+        And reserve limit is current
+        """
+        today = timezone.localtime().strftime('%Y-%m-%d')
+        current_hour = timezone.localtime().strftime('%H')
+        return self.availability_date.strftime('%Y-%m-%d') == today and current_hour < RESERVE_LIMIT_HOUR
+
 
 class Dish(models.Model):
     """
@@ -63,7 +75,6 @@ class Dish(models.Model):
         default=uuid.uuid4,
         editable=False
     )
-    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
     description = models.TextField(
         null=False,
         help_text='Description of the elements of the dish.'
@@ -90,3 +101,19 @@ class Dish(models.Model):
 
     def __str__(self):
         return self.description
+
+
+class DishMenu(models.Model):
+    uuid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    menu = models.ForeignKey(Menu, on_delete=models.CASCADE)
+    dish = models.ForeignKey(Dish, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = (('menu', 'dish'),)
+
+    def __str__(self):
+        return '{} - {}: ${}'.format(
+            self.menu.name,
+            self.dish.description,
+            self.dish.price
+        )

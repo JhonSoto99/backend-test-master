@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block head_content %}
+	<title>Menus</title>
+{% endblock %}
+{% block container %}
+	<div class="row">
+		<div class="col-lg-2 ml-auto mb-3">
+		</div>
+        <div class="col-lg-12">
+            {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                         <div class="alert alert-info {% if message.tags %}{{ message.tags }}{% endif %}" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+	</div>
+{% endblock %}

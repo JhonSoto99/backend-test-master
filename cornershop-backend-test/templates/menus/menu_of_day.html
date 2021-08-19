@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block head_content %}
+	<title>Menus of Day</title>
+{% endblock %}
+{% block container %}
+    <div class="row justify-content-md-center">
+        <div class="col-lg-7">
+            <h1>Menu of day</h1>
+            <div class="list-group">
+                <h3 class="mt-2">{{ menu.name | title }}</h3>
+                <li class="list-group-item">
+                    {% for dish_menu in menu.dishmenu_set.all %}
+
+                        <p>{{ dish_menu.dish.description }}
+                            <a href="{% url 'orders:create' menu_dish_id=dish_menu.uuid %}"
+                               class="btn btn-sm btn-dark float-right">
+                                Reserve
+                            </a>
+                        </p>
+                    {% empty %}
+                        <p>No dishes available</p>
+                    {% endfor %}
+                </li>
+            </div>
+        </div>
+    </div>
+{% endblock %}

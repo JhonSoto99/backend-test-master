@@ -4,6 +4,13 @@ from celery import Celery
 
 from .envtools import getenv
 
+import requests
+
+# Django
+from django.conf import settings
+from django.utils import timezone
+from django.urls import reverse
+
 
 class CelerySettings:
     # Settings for version 4.3.0
@@ -63,8 +70,48 @@ class CelerySettings:
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "backend_test.settings")
 
-settings = CelerySettings()
+settings_celery = CelerySettings()
 
 app = Celery("backend_test")
 app.config_from_object(settings)
 app.autodiscover_tasks()
+
+
+@app.task(bind=True)
+def send_menus(task=None):
+    """
+    Check if there is a menu of the day available for today
+    and it is sent to the established channel.
+    """
+    # Models
+    from menus.models import Menu
+
+    today = timezone.localtime().strftime('%Y-%m-%d')
+    menu_available = Menu.objects.filter(availability_date=today).exists()
+
+    if menu_available:
+        menu = Menu.objects.get(date=today)
+        if menu.is_enabled:
+            menu_dishes = menu.dish_set.all()
+            message = 'Hello! \n I share with you today menu \n\n'
+
+            for menu_dish in menu_dishes:
+                message += '* {}\n'.format(
+                    menu_dish.dish.description,
+                )
+
+            path = reverse('menus:menu_of_day')
+
+            message += '\n\nTo place your order visit the following link: {}'.format(
+                settings.SERVER_URL+path
+            )
+
+            session = requests.Session()
+            response = session.post(
+                settings.SLACK_CHANNEL,
+                json={
+                    "text": message
+                }
+            )
+
+            print(response.status_code, response.text)

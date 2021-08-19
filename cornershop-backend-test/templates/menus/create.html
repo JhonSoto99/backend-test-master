@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block head_content %}
+	<title>Menus | EMeals</title>
+{% endblock %}
+{% block container %}
+<div class="row">
+	<div class="col-lg-2 ml-auto">
+		<a href="{% url 'menus:list' %}" class="btn btn-secondary btn-block">go list</a>
+	</div>
+	<div class="col-lg-12">
+		<form method="POST" action="{% url 'menus:create' %}">
+			{% csrf_token %}
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="menuName">name:</label>
+                        <input type="text" class="form-control {% if form.name.errors %}is-invalid{% endif %}"
+                               id="name" placeholder="{{ form.date.label }}"
+                               value="{% if form.name.value is not None %}{{ form.name.value }}{% endif %}" name="name">
+                        <div class="invalid-feedback">
+                            {% for error in form.name.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label for="dateMenu">Date:</label>
+                        <input type="date" name="availability_date"
+                               class="form-control {% if form.date.errors %}is-invalid{% endif %}"
+                               id="date-menu"
+                               placeholder="Enter a date"
+                               value="{% if form.date.value is not None %}{{ form.date.value }}{% endif %}">
+                        <div class="invalid-feedback">
+                            {% for error in form.date.errors %}
+                                {{ error }}
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-block btn-primary">Save</button>
+                </div>
+            </div>
+		</form>
+	</div>
+</div>
+{% endblock %}

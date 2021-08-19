@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block head_content %}
+    <title>Reservation confirm</title>
+{% endblock %}
+{% block container %}
+    <div class="row justify-content-md-center">
+        <div class="col-lg-7">
+            <form method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="form-group">
+                            <label for="reservate-observations">{{ form.observations.label }}</label>
+                            <textarea class="form-control {% if form.observations.errors %}is-invalid{% endif %}"
+                                      name="observations" id="reservate-observations" rows="2">{% if form.observations.value is not None %}{{ form.observations.value }}{% endif %}</textarea>
+                            <div class="invalid-feedback">
+                                {% for error in form.observations.errors %}{{ error }}{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary">Reserve</button>
+            </form>
+        </div>
+    </div>
+{% endblock %}

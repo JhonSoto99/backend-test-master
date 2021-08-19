@@ -20,7 +20,7 @@ class Order(models.Model):
         on_delete=models.CASCADE
     )
     menu_dish = models.ForeignKey(
-        'menus.Dish',
+        'menus.DishMenu',
         on_delete=models.CASCADE
     )
     date = models.DateTimeField(

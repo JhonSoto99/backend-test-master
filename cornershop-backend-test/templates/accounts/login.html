@@ -1,0 +1,37 @@
+{% extends "base_public.html" %}
+
+{% block head_content %}
+<title>E-Meals sign in</title>
+{% endblock%}
+
+{% block container %}
+    <div class="row justify-content-md-center">
+        <div class="col-lg-4 mt-5">
+            {% if error %}
+                <p class="alert alert-danger">
+                    Your username and password didn't match.
+                </p>
+            {% endif%}
+
+            <form method="POST" action="{% url 'accounts:login' %}">
+                {% csrf_token %}
+
+                {% if request.GET.next %}
+                    <input type="hidden" name="next" value="{{ request.GET.next }}">
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="username">Email address</label>
+                    <input class="form-control" type="text" placeholder="Username" name="username" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input class="form-control" type="password" placeholder="Password" name="password" />
+                </div>
+                <button class="btn btn-primary btn-block mt-5" type="submit">Sign in!</button>
+            </form>
+            <p class="mt-4">Don't have an account yet? <a href="{% url 'accounts:signup' %}">Sign up here.</a></p>
+        </div>
+    </div>
+
+{% endblock %}
