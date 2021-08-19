@@ -6,7 +6,7 @@
     <div class="row">
         <div class="col-lg-2 ml-auto mb-3">
             {%  if not user.is_superuser and not user.is_staff %}
-                <a href="{% url 'menus:menu_of_day' %}" class="btn btn-block btn-primary">
+                <a href="{% url 'menus:check_exists_menu_of_day' %}" class="btn btn-block btn-primary">
                     New Reservation
                 </a>
             {% endif %}

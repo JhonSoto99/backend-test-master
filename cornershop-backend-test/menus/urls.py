@@ -14,7 +14,9 @@ urlpatterns = [
     # Menus
     url(r'^list/', MenuListView.as_view(), name="list"),
     url(r'^create/', MenuCreateView.as_view(), name="create"),
-    url(r'^menu_of_day/', MenuOfDayTemplateView.as_view(), name="menu_of_day"),
+    path(route='check_exists_menu_of_day/', view=check_exists_menu_of_day, name="check_exists_menu_of_day"),
+    path(route='menu_of_day/<uuid:menu_id>/', view=MenuOfDayTemplateView.as_view(), name='menu_of_day'),
+    path(route='not-available/', view=not_available_view, name="not_available"),
 
     # Notifications
     path(route='send_notification/<uuid:menu_id>/', view=menu_send_notification, name='send_notification'),

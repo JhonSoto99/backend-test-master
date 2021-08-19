@@ -3,13 +3,17 @@ Orders tests model.
 """
 
 # Django
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.contrib.auth.models import AnonymousUser, User
 from django.utils import timezone
 
 # Models
 from menus.models import Menu, DishMenu, Dish
 from orders.models import Order
 from accounts.models import User
+
+#Views
+from .views import OrderListView
 
 
 class CreateOrderTestCase(TestCase):
@@ -28,3 +32,15 @@ class CreateOrderTestCase(TestCase):
             observations="Observations for food"
         )
         self.assertIsNotNone(order.uuid)
+
+
+class OrderListViewTestCase(TestCase):
+    """
+    Test View OrderListView
+    """
+    longMessage = True
+    def test_get(self):
+        req = RequestFactory().get('/')
+        req.user = User()
+        resp = OrderListView.as_view()(req, *[], **{})
+        self.assertEqual(resp.status_code, 200)

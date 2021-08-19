@@ -3,11 +3,15 @@ Menus tests model.
 """
 
 # Django
-from django.test import TestCase
+from django.test import TestCase, RequestFactory
+from django.contrib.auth.models import AnonymousUser, User
 from django.utils import timezone
 
 # Model
 from .models import Menu, Dish, DishMenu
+
+# Views
+from .views import MenuListView, DishListView
 
 
 class CreateMenuTestCase(TestCase):
@@ -74,4 +78,31 @@ class CreateMenuDishTestCase(TestCase):
             dish=dish
         )
         self.assertIsNotNone(menu_dish.uuid)
+
+
+class MenuListViewTestCase(TestCase):
+    """
+    Test View MenuListView
+    """
+    longMessage = True
+    def test_get(self):
+        req = RequestFactory().get('/')
+        req.user = User()
+        resp = MenuListView.as_view()(req, *[], **{})
+        self.assertEqual(resp.status_code, 200)
+
+
+class DishListViewTestCase(TestCase):
+    """
+    Test View DishListView
+    """
+    longMessage = True
+    def test_get(self):
+        req = RequestFactory().get('/')
+        req.user = User()
+        resp = DishListView.as_view()(req, *[], **{})
+        self.assertEqual(resp.status_code, 200)
+
+
+
 

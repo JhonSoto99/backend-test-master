@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.views.generic.edit import CreateView
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
 
 # Models
 from .models import *
@@ -16,7 +17,7 @@ from .models import *
 from .forms import *
 
 # Celery
-from backend_test.celery import send_menus
+from .tasks import send_menu_to_slack
 
 
 class MenuListView(LoginRequiredMixin, ListView):
@@ -103,6 +104,31 @@ class DishCreateView(LoginRequiredMixin, CreateView):
             return HttpResponseRedirect(reverse('menus:list_dish'))
 
 
+def check_exists_menu_of_day(request):
+    """
+    Method for verifying if there is
+    a menu available to be offered to users
+    """
+    try:
+        menu = Menu.objects.latest('availability_date')
+    except ObjectDoesNotExist:
+        return HttpResponseRedirect(reverse('not_found'))
+
+    if not menu.is_menu_today:
+        return HttpResponseRedirect(reverse('menus:not_available'))
+
+    return HttpResponseRedirect(reverse('menus:menu_of_day', args=(
+        menu.uuid,
+    )))
+
+
+def not_available_view(request):
+    """
+    Menu not available.
+    """
+    return render(request, 'menus/not_available.html')
+
+
 class MenuOfDayTemplateView(LoginRequiredMixin, TemplateView):
     model = Menu
     template_name = 'menus/menu_of_day.html'
@@ -137,7 +163,8 @@ def menu_send_notification(request, menu_id):
     try:
         menu = Menu.objects.get(pk=menu_id)
         if menu.is_menu_today:
-            send_menus.delay()
+            #send_menus.delay()
+            send_menu_to_slack()
             msg = f'A notification will be sent to the slack channel for the menu {menu.name}.'
             messages.info(
                 request,
@@ -146,7 +173,7 @@ def menu_send_notification(request, menu_id):
     except ObjectDoesNotExist:
         return HttpResponseRedirect(reverse('not_found'))
 
-    return HttpResponseRedirect(reverse('menus:menu_list'))
+    return HttpResponseRedirect(reverse('menus:list'))
 
 
 @login_required

@@ -31,8 +31,12 @@ USE_X_FORWARDED_HOST = False
 SESSION_COOKIE_HTTPONLY = True
 
 SERVER_URL = os.getenv("SERVER_URL", default="*")
-RESERVE_LIMIT_HOUR = os.getenv('RESERVE_LIMIT_HOUR', default='24')
-SLACK_CHANNEL = "https://hooks.slack.com/services/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"
+RESERVE_LIMIT_HOUR = os.getenv('RESERVE_LIMIT_HOUR', default='11')
+SLACK_CHANNEL = os.getenv(
+    'SLACK_CHANNEL',
+    #default='https://hooks.slack.com/services/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'
+    default='https://hooks.slack.com/services/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'
+)
 
 
 APPEND_SLASH = False
@@ -49,7 +53,10 @@ APPS = [
     "rest_framework",
     "django_extensions",
     "backend_test.utils",
+    "django.contrib.sites"
 ]
+
+SITE_ID = 1
 
 LOCAL_APPS = [
     'accounts',

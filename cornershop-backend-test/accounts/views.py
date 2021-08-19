@@ -31,7 +31,7 @@ def login_view(request):
             else:
                 if user.is_superuser or user.is_staff:
                     return redirect('menus:list')
-                return redirect('menus:menu_of_day')
+                return redirect('menus:check_exists_menu_of_day')
         else:
             return render(request, 'accounts/login.html', {
                 'error': 'invalid username and password'
@@ -62,7 +62,7 @@ def signup_view(request):
             )
             new_user.save()
             login(request, new_user)
-            return redirect('menus:menu_of_day')
+            return redirect('menus:check_exists_menu_of_day')
 
     return render(request, 'accounts/signup.html', context={
         'form': form
