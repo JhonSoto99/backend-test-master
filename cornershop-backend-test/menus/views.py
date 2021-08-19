@@ -112,7 +112,7 @@ def check_exists_menu_of_day(request):
     try:
         menu = Menu.objects.latest('availability_date')
     except ObjectDoesNotExist:
-        return HttpResponseRedirect(reverse('not_found'))
+        return HttpResponseRedirect(reverse('menus:not_available'))
 
     if not menu.is_menu_today:
         return HttpResponseRedirect(reverse('menus:not_available'))
@@ -163,8 +163,7 @@ def menu_send_notification(request, menu_id):
     try:
         menu = Menu.objects.get(pk=menu_id)
         if menu.is_menu_today:
-            #send_menus.delay()
-            send_menu_to_slack()
+            send_menu_to_slack.delay()
             msg = f'A notification will be sent to the slack channel for the menu {menu.name}.'
             messages.info(
                 request,
